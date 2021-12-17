@@ -1,7 +1,6 @@
 package by.tms.controller;
 
 import by.tms.dao.HibernateUserDAO;
-import by.tms.dao.UserDAO;
 import by.tms.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,11 +17,11 @@ import javax.validation.Valid;
 @RequestMapping("user")
 public class UserController {
 
-    private final UserDAO userDAO;
+    private final HibernateUserDAO hibernateUserDAO;
 
     @Autowired
     public UserController(HibernateUserDAO hibernateUserDAO) {
-        this.userDAO = hibernateUserDAO;
+        this.hibernateUserDAO = hibernateUserDAO;
     }
 
     @GetMapping("/registration")
@@ -36,12 +35,12 @@ public class UserController {
         if(bindingResult.hasErrors()){
             return "registration";
         }
-        if (userDAO.findByLogin(user.getLogin()) == null) {
-            userDAO.save(user);
+        if (hibernateUserDAO.findByLogin(user.getLogin()) == null) {
+            hibernateUserDAO.save(user);
             return "redirect:/";
         } else {
             model.addAttribute("message", "Such a user exist");
-        userDAO.save(user);
+        hibernateUserDAO.save(user);
             return "registration";
         }
     }
@@ -54,7 +53,7 @@ public class UserController {
 
     @PostMapping("/authorization")
     public String authorization(@ModelAttribute("user") User user, Model model, HttpSession session) {
-        User thisUser = userDAO.findByLogin(user.getLogin());
+        User thisUser = hibernateUserDAO.findByLogin(user.getLogin());
         if (thisUser != null) {
             if (thisUser.getPassword().equals(user.getPassword())) {
                 session.setAttribute("authUser", thisUser);
