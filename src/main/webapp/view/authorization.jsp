@@ -12,7 +12,7 @@
 </head>
 <body>
 <form action="/user/authorization" method="post">
-    <input type="text" name="login" placeholder="Login"/>
+    <input type="text" name="username" placeholder="Username"/>
     <input type="password" name="password" placeholder="Password"/>
     <button>Enter</button>
 </form>

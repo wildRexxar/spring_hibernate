@@ -16,9 +16,9 @@
 <body>
 
 <s:form action="/user/registration" method="post" modelAttribute="user">
-<s:input path="login" placeholder="Login"/>
+<s:input path="username" placeholder="Username"/>
 <br>
-<s:errors path="login"/>
+<s:errors path="username"/>
 <br>
 <s:input path="password" placeholder="Password"/>
 <br>

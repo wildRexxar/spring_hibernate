@@ -15,7 +15,7 @@ public class User {
 
     @NotBlank(message = "not blank")
     @Size(min = 4, message = "login must be min 4 symbols")
-    private String login;
+    private String username;
 
     @NotBlank(message = "not blank")
     @Size(min = 4, message = "login must be min 4 symbols")
@@ -23,6 +23,11 @@ public class User {
 
     @Autowired
     public User(){}
+
+    public User (String login, String password) {
+        this.username = login;
+        this.password = password;
+    }
 
     public int getId() {
         return id;
@@ -32,12 +37,12 @@ public class User {
         this.id = id;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String login) {
+        this.username = login;
     }
 
     public String getPassword() {
@@ -49,7 +54,7 @@ public class User {
     }
 
     public String toString(){
-        return id+ " " + login;
+        return id+ " " + username;
     }
 
 }

@@ -20,8 +20,7 @@
 </c:if>
 
 <c:if test="${sessionScope.authUser != null}">
-    <p>Hello ${sessionScope.authUser.login}</p>
-    <p>Your  number is ${sessionScope.authUser.id}</p>
+    <p>Hello ${sessionScope.authUser.username}</p>
     <a href="/user/logout">Logout</a>
 </c:if>
 </body>

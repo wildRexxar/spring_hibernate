@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -32,18 +33,20 @@ public class UserController {
 
     @PostMapping("/registration")
     public String registration(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model) {
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "registration";
         }
-        if (hibernateUserDAO.findByLogin(user.getLogin()) == null) {
+
+        System.out.println("before validation");
+        if (hibernateUserDAO.existByUsername(user.getUsername()) == false) {
             hibernateUserDAO.save(user);
             return "redirect:/";
         } else {
             model.addAttribute("message", "Such a user exist");
-        hibernateUserDAO.save(user);
             return "registration";
         }
     }
+
 
     @GetMapping("/authorization")
     public String authorization(Model model) {
@@ -53,22 +56,23 @@ public class UserController {
 
     @PostMapping("/authorization")
     public String authorization(@ModelAttribute("user") User user, Model model, HttpSession session) {
-        User thisUser = hibernateUserDAO.findByLogin(user.getLogin());
-        if (thisUser != null) {
-            if (thisUser.getPassword().equals(user.getPassword())) {
-                session.setAttribute("authUser", thisUser);
+        if(hibernateUserDAO.existByUsername(user.getUsername())) {
+            User userFromDB = hibernateUserDAO.findByUsername(user.getUsername());
+            if(userFromDB.getPassword().equals(user.getPassword())) {
+                session.setAttribute("authUser", user);
                 return "redirect:/";
             } else {
                 model.addAttribute("message", "Wrong password");
+                return "authorization";
             }
         } else {
             model.addAttribute("message", "User does not exist");
+            return "authorization";
         }
-        return "authorization";
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session){
+    public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
     }
